@@ -56,19 +56,19 @@ Chunk and verse references included
 ## Project Structure
 
 bible-rag-langchain/
-├── app.py
+├── app.py                     # Gradio application entry point
 ├── data/
-│   └── bible.pdf
+│   └── bible.pdf              # Bible source document
 ├── src/
-│   ├── ingest.py
-│   ├── rag_qa.py
-│   ├── embeddings.py
-│   ├── prompts.py
-│   └── settings.py
-├── requirements.txt
-├── Dockerfile
-├── .dockerignore
-└── README.md
+│   ├── ingest.py              # PDF ingestion + vector store creation
+│   ├── rag_qa.py              # Retrieval and QA pipeline
+│   ├── embeddings.py          # Embedding backend abstraction
+│   ├── prompts.py             # System and user prompt templates
+│   └── settings.py            # Configuration and constants
+├── requirements.txt           # Python dependencies
+├── Dockerfile                 # Local containerization (optional)
+├── .dockerignore              # Docker ignore rules
+└── README.md                  # Project documentation
 
 ## Configuration
 
