@@ -78,6 +78,7 @@ Environment variables:
 
 OPENAI_API_KEY=your_api_key
 EMBEDDINGS_BACKEND=openai   # or huggingface
+
 Secrets are managed via Hugging Face Spaces during deployment.
 
 ## Deployment
