@@ -55,8 +55,6 @@ Chunk and verse references included
 
 ## Project Structure
 
-## Project Structure
-
 ```text
 bible-rag-langchain/
 ├── app.py                     # Gradio application entry point
