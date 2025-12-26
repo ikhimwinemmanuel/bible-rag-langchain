@@ -72,7 +72,7 @@ bible-rag-langchain/
 ├── Dockerfile                 # Local containerization (optional)
 ├── .dockerignore              # Docker ignore rules
 └── README.md                  # Project documentation
-
+```
 
 ## Configuration
 
