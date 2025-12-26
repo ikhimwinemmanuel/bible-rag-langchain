@@ -55,6 +55,9 @@ Chunk and verse references included
 
 ## Project Structure
 
+## Project Structure
+
+```text
 bible-rag-langchain/
 ├── app.py                     # Gradio application entry point
 ├── data/
@@ -69,6 +72,7 @@ bible-rag-langchain/
 ├── Dockerfile                 # Local containerization (optional)
 ├── .dockerignore              # Docker ignore rules
 └── README.md                  # Project documentation
+
 
 ## Configuration
 
