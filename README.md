@@ -96,3 +96,6 @@ Try the live application on Hugging Face Spaces:
 
 https://huggingface.co/spaces/Ikhimwin/bible-rag-langchain 
 
+## Publication on Medium
+
+https://medium.com/@ikhimwinemmanuel/building-a-bible-q-a-assistant-with-rag-langchain-chromadb-59543c976199?postPublishedType=initial
