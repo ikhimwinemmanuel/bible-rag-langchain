@@ -8,11 +8,6 @@ __pycache__/
 # Ignore vector DB files
 db/
 
-# Ignore large data files
-data/*.pdf
-data/*.docx
-data/*.txt
-
 # Ignore virtual environments
 venv/
 .venv/
