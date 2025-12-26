@@ -2,7 +2,7 @@
 
 A Retrieval-Augmented Generation (RAG) application that answers questions strictly from Bible text, refusing to guess when evidence is missing.
 
-Built as a practical exploration of RAG system design, semantic search, and safe LLM usage.
+Built as a practical exploration of RAG system design, semantic search in vector databases, and System prompt design in LLM usage.
 
 ## Overview
 
