@@ -58,6 +58,7 @@ Chunk and verse references included
 bible-rag-langchain/
 ├── app.py
 ├── data/
+│   └── bible.pdf
 ├── src/
 │   ├── ingest.py
 │   ├── rag_qa.py
