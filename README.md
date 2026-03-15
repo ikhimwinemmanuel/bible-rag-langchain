@@ -57,6 +57,8 @@ Chunk and verse references included
 
 ```text
 bible-rag-langchain/
+├──assets/
+│   └── demo_ui.webp
 ├── app.py                     # Gradio application entry point
 ├── data/
 │   └── bible.pdf              # Bible source document
@@ -90,9 +92,12 @@ Notes:
 Answers are generated only from retrieved Bible passages
 The architecture allows easy switching between paid and free embedding models
 
-## Live Demo
-
+## Demo
 Try the live application on Hugging Face Spaces:
+
+### Snapshot of Live Demonstration
+![Bible RAG Assistant](assets/demo_ui.webp)
+
 
 https://huggingface.co/spaces/Ikhimwin/bible-rag-langchain 
 
