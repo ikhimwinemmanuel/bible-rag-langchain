@@ -26,37 +26,37 @@ The project is evaluated two ways: a fast deterministic harness for CI-style che
 
 On the harder set (`eval/dataset_hard.json`, 24 cases incl. near-miss off-topic), the same harness also scores 100% / 100% / 100% — natural-language questions retrieve well, and the LLM refuses near-miss questions ("What year was Jesus born?") as a second layer even when they pass the score gate.
 
-**2. RAGAS** (LLM-as-judge; `python -m eval.ragas_eval [dataset]`):
+**2. RAGAS** (LLM-as-judge; `python -m eval.ragas_eval [dataset]`).
 
-| RAGAS metric | Easy set (15) | Hard set (15) | Meaning |
-|---|---|---|---|
-| Faithfulness | 0.93 | 0.93 | Answer claims are supported by the retrieved passages |
-| Answer relevancy | 0.90 | 0.98 | Answer actually addresses the question |
-| Context precision | 0.80 | 0.83 | Retrieved passages are relevant / well-ranked |
-| Context recall | 1.00 | 0.87 | Retrieval covered what the reference answer needs |
+The **hard set** (`eval/ragas_dataset_hard.json`) stresses the system with precise-detail questions (ages/numbers), non-KJV paraphrasing, and precision traps. It exposed a retrieval weakness that motivated **hybrid retrieval** (see below); the headline result is the context-recall gain:
 
-The **hard set** (`eval/ragas_dataset_hard.json`) stresses the system with precise-detail questions (ages/numbers), non-KJV paraphrasing, and precision traps. Run any set by passing its path, e.g. `python -m eval.evaluate eval/dataset_hard.json`.
+| RAGAS metric (hard set) | Dense only | Hybrid (dense + BM25) |
+|---|---|---|
+| **Context recall** | **0.87** | **0.93** |
+| Context precision | 0.83 | 0.81 |
+| Faithfulness | ~0.93 | ~0.95 |
+| Answer relevancy | ~0.98 | ~0.98 |
 
-**What the hard set revealed:**
-- **Faithfulness holds at 0.93** even as difficulty rises — the system stays grounded (or refuses) rather than hallucinating.
-- **Context recall drops to 0.87** — verse-range chunking sometimes fails to surface the exact verse a specific-detail answer needs. Clear next step: hybrid (BM25 + dense) retrieval or finer-grained chunks.
-- It also caught a real bug: the retrieval gate and the LLM used two slightly different refusal strings (straight vs. curly apostrophe), making valid refusals undetectable. Fixed by making the refusal message a single source of truth.
+**How to read these numbers honestly:**
+- **Context recall (0.87 → 0.93) is the stable, real win.** Retrieval is deterministic, so this figure is reproducible run-to-run. It is corroborated by concrete cases: verses dense search missed entirely — Lot's wife (Gen 19:26), the writing on Belshazzar's wall (Dan 5:25), the rivers of Eden (Gen 2:14) — are now retrieved via BM25 keyword matching.
+- **Trade-off:** easy-set context precision drops (~0.80 → ~0.67) because BM25 adds keyword candidates the LLM then ignores; answer-quality metrics do not suffer.
+- **Faithfulness/relevancy are reported with `~`** because, on 15-case sets, the RAGAS LLM judge varies by ±0.1 between identical runs. The small eval set is itself a known limitation — treat these as directional, not precise.
 
-Datasets are intentionally small and readable; extend them to stress the system further. RAGAS deps are heavy and eval-only — see `eval/requirements-eval.txt`.
+Datasets are intentionally small and readable; extend them for tighter confidence intervals. RAGAS deps are heavy and eval-only — see `eval/requirements-eval.txt`.
 
-## How grounding works
+## How retrieval and grounding work
 
-1. Retrieve the top-K chunks with **cosine relevance scores** (Chroma is built with `hnsw:space: cosine` so scores land in `[0, 1]`).
-2. Keep only chunks scoring above `SCORE_THRESHOLD`.
-3. If nothing clears the bar, return a fixed refusal message — **no LLM call**.
-4. Otherwise, pass the surviving passages (labelled with their verse references) to the LLM under a grounding system prompt.
+1. **Grounding gate (dense).** Score the top-K chunks with **cosine relevance** (Chroma is built with `hnsw:space: cosine` so scores land in `[0, 1]`). If the best score is below `SCORE_THRESHOLD`, return a fixed refusal message — **no LLM call**. The gate is deliberately dense-only: cosine relevance is a good off-topic detector, whereas BM25 scores are not, so a stray keyword can never let an off-topic question through.
+2. **Hybrid retrieval (dense + BM25).** Once the gate passes, fuse the dense candidates with a BM25 keyword retriever over the same chunks using **Reciprocal Rank Fusion**, keeping the top `FINAL_K`. BM25 recovers the exact verse a specific-detail question needs (names, numbers, rare terms) when the embedding signal is diluted across a verse-range chunk.
+3. **Answer.** Pass the fused passages (labelled with their verse references) to the LLM under a grounding system prompt; it cites the references it used or emits the refusal message.
 
-The threshold is backend-specific and was chosen from measured data: with OpenAI embeddings and verse-range chunks, off-topic queries top out around 0.78 while on-topic queries bottom out around 0.81, so the default `SCORE_THRESHOLD = 0.80` separates them cleanly. It is overridable via the `SCORE_THRESHOLD` environment variable.
+The threshold is backend-specific and was chosen from measured data: with OpenAI embeddings and verse-range chunks, off-topic queries top out around 0.78 while on-topic queries bottom out around 0.81, so the default `SCORE_THRESHOLD = 0.80` separates them cleanly. `FINAL_K` (8) exceeds `TOP_K` (5) so BM25's finds are *added* to the dense results rather than evicting them. Both are overridable via environment / settings.
 
 ## Tech Stack
 
 - **LangChain** – RAG orchestration
 - **ChromaDB** – vector database for semantic search (cosine distance)
+- **BM25 (rank-bm25)** – sparse keyword retriever for hybrid retrieval
 - **OpenAI / Hugging Face** – interchangeable embedding backends
 - **Gradio** – web interface
 - **Hugging Face Spaces** – deployment
@@ -69,9 +69,9 @@ The threshold is backend-specific and was chosen from measured data: with OpenAI
 - Embed and store in Chroma with a cosine distance metric
 
 **Retrieval & answering** (`src/rag_qa.py`)
-- Relevance-scored retrieval with a grounding threshold (see above)
+- Dense grounding gate + hybrid (dense + BM25) retrieval fused with RRF (see above)
 - Greetings and empty input handled in code (no wasted retrieval / LLM calls)
-- Cached vector store and LLM client
+- Cached vector store, BM25 index, and LLM client
 - Answers cite verse references; the UI shows the source passages
 
 ## Project Structure

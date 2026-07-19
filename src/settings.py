@@ -28,8 +28,17 @@ CHUNK_OVERLAP = 150
 
 # ----------- RETRIEVAL SETTINGS -----------
 
-# How many chunks to retrieve for each question
+# How many candidates each retriever (dense + BM25) fetches before fusion
 TOP_K = 5
+
+# How many fused chunks to keep as the final context passed to the LLM.
+# Must exceed TOP_K so BM25's rare-term finds are ADDED to the dense results
+# rather than evicting them (evicting good dense chunks regressed easy cases).
+# 8 = dense's 5 + BM25's top unique finds. This is the sweet spot: FINAL_K=6
+# was too tight for RRF to slot in BM25's exact-verse find (hard-set recall
+# stayed at the dense baseline), while 8 recovers it. Trade-off is some context
+# precision on easy questions (extra keyword candidates the LLM then ignores).
+FINAL_K = 8
 
 # Minimum relevance score (0=unrelated, 1=identical) for a chunk to be accepted.
 # Backend-specific: with OpenAI embeddings + verse-range chunks, the eval set

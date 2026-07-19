@@ -9,6 +9,8 @@ langchain-text-splitters==0.3.8
 # langchain-chroma replaces the deprecated langchain_community Chroma import;
 # 0.2.x is the line compatible with the pinned langchain-core 0.3.x stack.
 langchain-chroma==0.2.4
+# BM25 keyword retriever for hybrid (dense + sparse) retrieval
+rank-bm25==0.2.2
 # NOTE: intentionally unpinned until verified against the deployed build;
 # pin to the Space's resolved versions once confirmed.
 chromadb

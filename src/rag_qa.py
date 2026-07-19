@@ -1,6 +1,9 @@
 import functools
+import re
 
 from langchain_chroma import Chroma
+from langchain_community.retrievers import BM25Retriever
+from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI
 
 from src.embeddings import get_embeddings
@@ -8,6 +11,7 @@ from src.settings import (
     CHROMA_DIR,
     OPENAI_MODEL,
     TOP_K,
+    FINAL_K,
     SCORE_THRESHOLD,
 )
 from src.prompts import SYSTEM_PROMPT, BIBLE_RAG_PROMPT, NO_CONTEXT_MESSAGE
@@ -48,18 +52,61 @@ def is_greeting(text):
     return normalized in GREETINGS
 
 
-def retrieve_context(vectordb, question):
-    """Return only the chunks whose relevance score clears SCORE_THRESHOLD.
+def _bm25_preprocess(text):
+    """Lowercase word-token tokenizer so keyword matching is case-insensitive."""
+    return re.findall(r"\w+", text.lower())
 
-    Uses relevance scores (0=unrelated, 1=identical) rather than raw distance,
-    so SCORE_THRESHOLD is a meaningful "minimum similarity" gate. This is what
-    lets the assistant refuse to answer when nothing relevant is retrieved.
+
+@functools.lru_cache(maxsize=1)
+def get_bm25_retriever():
+    """Build a BM25 keyword retriever over the same chunks as the vector store.
+
+    Dense (embedding) search can miss the exact verse a specific-detail question
+    needs when its signal is diluted in a verse-range chunk; BM25 recovers those
+    by matching rare surface terms (names, numbers, "MENE", "Euphrates", ...).
     """
-    docs_and_scores = vectordb.similarity_search_with_relevance_scores(
-        question,
-        k=TOP_K,
-    )
-    return [doc for doc, score in docs_and_scores if score >= SCORE_THRESHOLD]
+    vectordb = load_vectordb()
+    data = vectordb.get(include=["documents", "metadatas"])
+    docs = [
+        Document(page_content=text, metadata=meta)
+        for text, meta in zip(data["documents"], data["metadatas"])
+    ]
+    retriever = BM25Retriever.from_documents(docs, preprocess_func=_bm25_preprocess)
+    retriever.k = TOP_K
+    return retriever
+
+
+def _rrf_fuse(ranked_lists, top_n, k=60):
+    """Reciprocal Rank Fusion: merge ranked doc lists into one, deduped by ref."""
+    scores = {}
+    docs_by_key = {}
+    for docs in ranked_lists:
+        for rank, doc in enumerate(docs):
+            key = doc.metadata.get("ref") or doc.page_content[:64]
+            scores[key] = scores.get(key, 0.0) + 1.0 / (k + rank + 1)
+            docs_by_key[key] = doc
+    ranked = sorted(scores, key=scores.get, reverse=True)
+    return [docs_by_key[key] for key in ranked[:top_n]]
+
+
+def retrieve_context(vectordb, question):
+    """Hybrid retrieval with a dense grounding gate.
+
+    The refuse/answer decision uses the dense cosine relevance score (a good
+    off-topic detector: SCORE_THRESHOLD separates on- from off-topic). Only if
+    that gate passes do we fuse the dense and BM25 candidate lists with RRF, so
+    off-topic questions can never be answered via a stray keyword match, while
+    on-topic answers gain BM25's exact-term recall.
+    """
+    dense_scored = vectordb.similarity_search_with_relevance_scores(question, k=TOP_K)
+
+    # Grounding gate: nothing relevant enough -> refuse (return no context).
+    if not dense_scored or max(score for _, score in dense_scored) < SCORE_THRESHOLD:
+        return []
+
+    dense_docs = [doc for doc, _ in dense_scored]
+    bm25_docs = get_bm25_retriever().invoke(question)
+    return _rrf_fuse([dense_docs, bm25_docs], top_n=FINAL_K)
 
 
 def format_context(docs):
