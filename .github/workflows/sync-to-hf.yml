@@ -26,5 +26,5 @@ jobs:
           git lfs install
           # Force-push so GitHub is the single source of truth for the Space.
           git push --force \
-            "https://ikhimwinemmanuel:${HF_TOKEN}@huggingface.co/spaces/Ikhimwin/bible-rag-langchain" \
+            "https://Ikhimwin:${HF_TOKEN}@huggingface.co/spaces/Ikhimwin/bible-rag-langchain" \
             main
