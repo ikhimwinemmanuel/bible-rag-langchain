@@ -1,0 +1,30 @@
+{
+  "description": "HARD evaluation set for the Bible RAG assistant. Stresses the system with precise-detail questions (numbers/ages), non-KJV paraphrasing, precision traps (common-wrong-answer questions), and near-miss off-topic questions that sound biblical but are not answerable from the text. Number keywords include both digit and KJV word forms because the LLM answers in digits while the source spells numbers out.",
+  "cases": [
+    {"question": "How old was Methuselah when he died?", "answerable": true, "expected_keywords": ["969", "nine hundred sixty and nine"]},
+    {"question": "How many days and nights did it rain during the great flood?", "answerable": true, "expected_keywords": ["40", "forty"]},
+    {"question": "How old was Noah when the flood came upon the earth?", "answerable": true, "expected_keywords": ["600", "six hundred"]},
+    {"question": "What did Lot's wife turn into when she looked back?", "answerable": true, "expected_keywords": ["pillar of salt", "salt"]},
+    {"question": "What kind of animal spoke to Balaam?", "answerable": true, "expected_keywords": ["ass", "donkey"]},
+    {"question": "Who were the parents of John the Baptist?", "answerable": true, "expected_keywords": ["Zacharias", "Elisabeth"]},
+    {"question": "What words were written on the wall at Belshazzar's feast?", "answerable": true, "expected_keywords": ["MENE", "TEKEL", "UPHARSIN"]},
+    {"question": "Who was Abraham's firstborn son?", "answerable": true, "expected_keywords": ["Ishmael"]},
+    {"question": "Which river flowed out of Eden toward the east of Assyria?", "answerable": true, "expected_keywords": ["Hiddekel", "Euphrates"]},
+    {"question": "How many pieces of silver was Jesus betrayed for?", "answerable": true, "expected_keywords": ["thirty", "30"]},
+    {"question": "Who committed the first murder, and who was the victim?", "answerable": true, "expected_keywords": ["Cain", "Abel"]},
+    {"question": "What did Jesus turn water into at the wedding in Cana?", "answerable": true, "expected_keywords": ["wine"]},
+    {"question": "How many days did Jesus fast in the wilderness?", "answerable": true, "expected_keywords": ["forty", "40"]},
+    {"question": "Who interpreted Pharaoh's dreams in Egypt?", "answerable": true, "expected_keywords": ["Joseph"]},
+    {"question": "How long was Jonah in the belly of the fish?", "answerable": true, "expected_keywords": ["three days", "three"]},
+    {"question": "Who killed the Philistine giant Goliath?", "answerable": true, "expected_keywords": ["David"]},
+    {"question": "In which garden did God place Adam?", "answerable": true, "expected_keywords": ["Eden"]},
+    {"question": "How many sons did Jacob have?", "answerable": true, "expected_keywords": ["twelve", "12"]},
+
+    {"question": "In what calendar year was Jesus born?", "answerable": false, "expected_keywords": []},
+    {"question": "Who was the king of France during the time of Moses?", "answerable": false, "expected_keywords": []},
+    {"question": "What does the Bible say about using smartphones?", "answerable": false, "expected_keywords": []},
+    {"question": "What is the population of Jerusalem today?", "answerable": false, "expected_keywords": []},
+    {"question": "Which apostle invented the printing press?", "answerable": false, "expected_keywords": []},
+    {"question": "How much did Noah's ark weigh in kilograms?", "answerable": false, "expected_keywords": []}
+  ]
+}

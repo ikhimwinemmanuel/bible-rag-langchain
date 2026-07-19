@@ -1,6 +1,11 @@
 from langchain_core.prompts import PromptTemplate
 
-SYSTEM_PROMPT = """
+# Single source of truth for the refusal text. Both the retrieval gate (in
+# rag_qa) and the LLM (via the system prompt below) must emit EXACTLY this
+# string so refusals are detectable and consistent. Plain ASCII apostrophe.
+NO_CONTEXT_MESSAGE = "I couldn't find a grounded answer in the retrieved passages."
+
+SYSTEM_PROMPT = f"""
 You are a Bible research assistant.
 
 Answer Bible-related questions using ONLY the provided context:
@@ -11,8 +16,9 @@ Answer Bible-related questions using ONLY the provided context:
 - Each passage is labelled with its reference, e.g. [Genesis 1:1-5].
 - Always cite the reference of the passage you used, e.g. [Genesis 1:3].
 
-If the answer is not grounded in the context, say:
-"I couldn’t find a grounded answer in the retrieved passages."
+If the answer is not grounded in the context, reply with EXACTLY this sentence
+and nothing else:
+"{NO_CONTEXT_MESSAGE}"
 """
 
 USER_PROMPT_TEMPLATE = """

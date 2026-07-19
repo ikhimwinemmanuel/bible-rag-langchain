@@ -37,9 +37,15 @@ from ragas.metrics import (
 from src.rag_qa import answer_with_sources
 from src.settings import OPENAI_MODEL
 
-DATASET_PATH = os.path.join(os.path.dirname(__file__), "ragas_dataset.json")
-CSV_PATH = os.path.join(os.path.dirname(__file__), "ragas_results.csv")
-JSON_PATH = os.path.join(os.path.dirname(__file__), "ragas_results.json")
+HERE = os.path.dirname(__file__)
+if len(sys.argv) > 1:
+    DATASET_PATH = sys.argv[1]
+    _base = os.path.splitext(DATASET_PATH)[0] + "_results"
+else:
+    DATASET_PATH = os.path.join(HERE, "ragas_dataset.json")
+    _base = os.path.join(HERE, "ragas_results")
+CSV_PATH = _base + ".csv"
+JSON_PATH = _base + ".json"
 
 
 def build_samples():

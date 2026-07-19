@@ -24,16 +24,25 @@ The project is evaluated two ways: a fast deterministic harness for CI-style che
 | Refusal accuracy | 100% (20/20) | Answered in-scope questions, refused off-topic ones |
 | Answer coverage | 100% (15/15) | Final answer contained the expected fact |
 
-**2. RAGAS** (`eval/ragas_dataset.json`, 15 cases; `python -m eval.ragas_eval`):
+On the harder set (`eval/dataset_hard.json`, 24 cases incl. near-miss off-topic), the same harness also scores 100% / 100% / 100% — natural-language questions retrieve well, and the LLM refuses near-miss questions ("What year was Jesus born?") as a second layer even when they pass the score gate.
 
-| RAGAS metric | Score | Meaning |
-|---|---|---|
-| Faithfulness | 0.93 | Answer claims are supported by the retrieved passages |
-| Answer relevancy | 0.90 | Answer actually addresses the question |
-| Context precision | 0.80 | Retrieved passages are relevant / well-ranked |
-| Context recall | 1.00 | Retrieval covered what the reference answer needs |
+**2. RAGAS** (LLM-as-judge; `python -m eval.ragas_eval [dataset]`):
 
-Both datasets are intentionally small and readable; extend them to stress the system further. RAGAS deps are heavy and eval-only — see `eval/requirements-eval.txt`.
+| RAGAS metric | Easy set (15) | Hard set (15) | Meaning |
+|---|---|---|---|
+| Faithfulness | 0.93 | 0.93 | Answer claims are supported by the retrieved passages |
+| Answer relevancy | 0.90 | 0.98 | Answer actually addresses the question |
+| Context precision | 0.80 | 0.83 | Retrieved passages are relevant / well-ranked |
+| Context recall | 1.00 | 0.87 | Retrieval covered what the reference answer needs |
+
+The **hard set** (`eval/ragas_dataset_hard.json`) stresses the system with precise-detail questions (ages/numbers), non-KJV paraphrasing, and precision traps. Run any set by passing its path, e.g. `python -m eval.evaluate eval/dataset_hard.json`.
+
+**What the hard set revealed:**
+- **Faithfulness holds at 0.93** even as difficulty rises — the system stays grounded (or refuses) rather than hallucinating.
+- **Context recall drops to 0.87** — verse-range chunking sometimes fails to surface the exact verse a specific-detail answer needs. Clear next step: hybrid (BM25 + dense) retrieval or finer-grained chunks.
+- It also caught a real bug: the retrieval gate and the LLM used two slightly different refusal strings (straight vs. curly apostrophe), making valid refusals undetectable. Fixed by making the refusal message a single source of truth.
+
+Datasets are intentionally small and readable; extend them to stress the system further. RAGAS deps are heavy and eval-only — see `eval/requirements-eval.txt`.
 
 ## How grounding works
 

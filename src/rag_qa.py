@@ -10,14 +10,14 @@ from src.settings import (
     TOP_K,
     SCORE_THRESHOLD,
 )
-from src.prompts import SYSTEM_PROMPT, BIBLE_RAG_PROMPT
+from src.prompts import SYSTEM_PROMPT, BIBLE_RAG_PROMPT, NO_CONTEXT_MESSAGE
 
-# Canned replies for the two non-retrieval paths, kept in sync with SYSTEM_PROMPT.
+# Canned reply for greetings, kept in sync with SYSTEM_PROMPT. The refusal
+# message (NO_CONTEXT_MESSAGE) is imported so the gate and the LLM agree exactly.
 GREETING_REPLY = (
     "Hello. I am a RAG-based Bible assistant. "
     "How can I help you with a Bible-related question?"
 )
-NO_CONTEXT_MESSAGE = "I couldn't find a grounded answer in the retrieved passages."
 
 # Short inputs treated as greetings so we skip retrieval and an LLM call entirely.
 GREETINGS = {

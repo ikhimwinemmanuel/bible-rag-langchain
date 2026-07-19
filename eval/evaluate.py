@@ -10,9 +10,11 @@ Measures three things against a labeled dataset (eval/dataset.json):
      the expected keyword(s)? (end-to-end correctness)
 
 Run from the project root (needs a built vector DB and an OpenAI key):
-    python -m eval.evaluate
+    python -m eval.evaluate                     # default: eval/dataset.json
+    python -m eval.evaluate eval/dataset_hard.json
 
-Writes a machine-readable summary to eval/results.json.
+Writes a machine-readable summary next to the dataset (results.json for the
+default set, <name>_results.json for any other).
 """
 import json
 import os
@@ -28,13 +30,27 @@ from src.rag_qa import (
     NO_CONTEXT_MESSAGE,
 )
 
-DATASET_PATH = os.path.join(os.path.dirname(__file__), "dataset.json")
-RESULTS_PATH = os.path.join(os.path.dirname(__file__), "results.json")
+HERE = os.path.dirname(__file__)
+if len(sys.argv) > 1:
+    DATASET_PATH = sys.argv[1]
+    RESULTS_PATH = os.path.splitext(DATASET_PATH)[0] + "_results.json"
+else:
+    DATASET_PATH = os.path.join(HERE, "dataset.json")
+    RESULTS_PATH = os.path.join(HERE, "results.json")
 
 
 def contains_any(text, keywords):
     text_low = text.lower()
     return any(kw.lower() in text_low for kw in keywords)
+
+
+def _norm(text):
+    """Normalize curly apostrophes/quotes so refusal detection is punctuation-proof."""
+    return text.strip().replace("’", "'").replace("‘", "'")
+
+
+def is_refusal(answer):
+    return _norm(answer) == _norm(NO_CONTEXT_MESSAGE)
 
 
 def evaluate():
@@ -64,7 +80,7 @@ def evaluate():
 
         # --- End-to-end answer ---
         answer = answer_question(q)
-        refused = answer.strip() == NO_CONTEXT_MESSAGE
+        refused = is_refusal(answer)
 
         # --- Refusal accuracy ---
         refusal_ok = (not refused) if answerable else refused

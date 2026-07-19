@@ -1,0 +1,20 @@
+{
+  "description": "HARD ground-truth set for RAGAS evaluation. Precise-detail and paraphrased questions with gold reference answers; several target passages that verse-range retrieval struggles to surface, so context recall/faithfulness are expected to be lower than on the easy set.",
+  "cases": [
+    {"question": "How old was Methuselah when he died?", "reference": "Methuselah lived nine hundred sixty and nine years (969), and then he died."},
+    {"question": "How many days and nights did it rain during the great flood?", "reference": "It rained upon the earth forty days and forty nights."},
+    {"question": "How old was Noah when the flood came upon the earth?", "reference": "Noah was six hundred years old when the flood of waters came upon the earth."},
+    {"question": "What did Lot's wife turn into when she looked back?", "reference": "Lot's wife looked back and became a pillar of salt."},
+    {"question": "What kind of animal spoke to Balaam?", "reference": "Balaam's donkey (his ass) spoke to him."},
+    {"question": "Who were the parents of John the Baptist?", "reference": "John the Baptist's parents were Zacharias, a priest, and his wife Elisabeth."},
+    {"question": "What words were written on the wall at Belshazzar's feast?", "reference": "The writing on the wall was MENE, MENE, TEKEL, UPHARSIN."},
+    {"question": "Who was Abraham's firstborn son?", "reference": "Ishmael, born to Hagar, was Abraham's firstborn son."},
+    {"question": "Which river flowed out of Eden toward the east of Assyria?", "reference": "Hiddekel is the river that flowed toward the east of Assyria; the fourth river was Euphrates."},
+    {"question": "How many pieces of silver was Jesus betrayed for?", "reference": "Judas betrayed Jesus for thirty pieces of silver."},
+    {"question": "Who committed the first murder, and who was the victim?", "reference": "Cain committed the first murder, killing his brother Abel."},
+    {"question": "What did Jesus turn water into at the wedding in Cana?", "reference": "Jesus turned water into wine at the wedding in Cana."},
+    {"question": "How many days did Jesus fast in the wilderness?", "reference": "Jesus fasted forty days and forty nights in the wilderness."},
+    {"question": "Who interpreted Pharaoh's dreams in Egypt?", "reference": "Joseph interpreted Pharaoh's dreams."},
+    {"question": "How long was Jonah in the belly of the fish?", "reference": "Jonah was in the belly of the fish three days and three nights."}
+  ]
+}

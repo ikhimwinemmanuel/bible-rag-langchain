@@ -1,0 +1,207 @@
+{
+  "summary": {
+    "n_cases": 24,
+    "retrieval_recall_at_k_pct": 100.0,
+    "refusal_accuracy_pct": 100.0,
+    "answer_coverage_pct": 100.0,
+    "counts": {
+      "retrieval": "18/18",
+      "refusal": "24/24",
+      "coverage": "18/18"
+    }
+  },
+  "rows": [
+    {
+      "question": "How old was Methuselah when he died?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "How many days and nights did it rain during the great flood?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "How old was Noah when the flood came upon the earth?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What did Lot's wife turn into when she looked back?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What kind of animal spoke to Balaam?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who were the parents of John the Baptist?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What words were written on the wall at Belshazzar's feast?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who was Abraham's firstborn son?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Which river flowed out of Eden toward the east of Assyria?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "How many pieces of silver was Jesus betrayed for?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who committed the first murder, and who was the victim?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What did Jesus turn water into at the wedding in Cana?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "How many days did Jesus fast in the wilderness?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who interpreted Pharaoh's dreams in Egypt?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "How long was Jonah in the belly of the fish?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who killed the Philistine giant Goliath?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "In which garden did God place Adam?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "How many sons did Jacob have?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "In what calendar year was Jesus born?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    },
+    {
+      "question": "Who was the king of France during the time of Moses?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    },
+    {
+      "question": "What does the Bible say about using smartphones?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    },
+    {
+      "question": "What is the population of Jerusalem today?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    },
+    {
+      "question": "Which apostle invented the printing press?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    },
+    {
+      "question": "How much did Noah's ark weigh in kilograms?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    }
+  ]
+}
