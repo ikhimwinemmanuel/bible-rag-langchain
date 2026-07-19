@@ -1,0 +1,175 @@
+{
+  "summary": {
+    "n_cases": 20,
+    "retrieval_recall_at_k_pct": 100.0,
+    "refusal_accuracy_pct": 100.0,
+    "answer_coverage_pct": 100.0,
+    "counts": {
+      "retrieval": "15/15",
+      "refusal": "20/20",
+      "coverage": "15/15"
+    }
+  },
+  "rows": [
+    {
+      "question": "Who built the ark?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What is the greatest commandment?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who was swallowed by a great fish?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What did God create on the first day?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who led the Israelites out of Egypt?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Where was Jesus born?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who denied Jesus three times?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who was thrown into the lions' den?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What are the first words of the Bible?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who betrayed Jesus?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What did Moses receive on Mount Sinai?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who was the strong man whose strength was in his hair?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "How did God create man?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "Who was the mother of Jesus?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What happened when the people built the Tower of Babel?",
+      "answerable": true,
+      "refused": false,
+      "refusal_ok": true,
+      "retrieval_hit": true,
+      "coverage_hit": true
+    },
+    {
+      "question": "What is the capital of France?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    },
+    {
+      "question": "Tell me about quantum physics.",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    },
+    {
+      "question": "How do I bake a chocolate cake?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    },
+    {
+      "question": "Who won the World Cup in 2018?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    },
+    {
+      "question": "What is the current price of Bitcoin?",
+      "answerable": false,
+      "refused": true,
+      "refusal_ok": true,
+      "retrieval_hit": null,
+      "coverage_hit": null
+    }
+  ]
+}

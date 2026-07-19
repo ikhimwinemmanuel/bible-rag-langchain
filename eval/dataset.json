@@ -1,0 +1,26 @@
+{
+  "description": "Labeled evaluation set for the Bible RAG assistant. 'answerable' questions should retrieve a relevant passage and be answered; 'unanswerable' (off-topic) questions must be refused. expected_keywords are matched case-insensitively against retrieved context and the final answer.",
+  "cases": [
+    {"question": "Who built the ark?", "answerable": true, "expected_keywords": ["Noah", "ark"]},
+    {"question": "What is the greatest commandment?", "answerable": true, "expected_keywords": ["love", "heart", "God"]},
+    {"question": "Who was swallowed by a great fish?", "answerable": true, "expected_keywords": ["Jonah", "fish"]},
+    {"question": "What did God create on the first day?", "answerable": true, "expected_keywords": ["light"]},
+    {"question": "Who led the Israelites out of Egypt?", "answerable": true, "expected_keywords": ["Moses"]},
+    {"question": "Where was Jesus born?", "answerable": true, "expected_keywords": ["Bethlehem"]},
+    {"question": "Who denied Jesus three times?", "answerable": true, "expected_keywords": ["Peter", "deny"]},
+    {"question": "Who was thrown into the lions' den?", "answerable": true, "expected_keywords": ["Daniel", "lions"]},
+    {"question": "What are the first words of the Bible?", "answerable": true, "expected_keywords": ["beginning", "God", "created"]},
+    {"question": "Who betrayed Jesus?", "answerable": true, "expected_keywords": ["Judas"]},
+    {"question": "What did Moses receive on Mount Sinai?", "answerable": true, "expected_keywords": ["commandments"]},
+    {"question": "Who was the strong man whose strength was in his hair?", "answerable": true, "expected_keywords": ["Samson"]},
+    {"question": "How did God create man?", "answerable": true, "expected_keywords": ["dust", "ground", "breath"]},
+    {"question": "Who was the mother of Jesus?", "answerable": true, "expected_keywords": ["Mary"]},
+    {"question": "What happened when the people built the Tower of Babel?", "answerable": true, "expected_keywords": ["language"]},
+
+    {"question": "What is the capital of France?", "answerable": false, "expected_keywords": []},
+    {"question": "Tell me about quantum physics.", "answerable": false, "expected_keywords": []},
+    {"question": "How do I bake a chocolate cake?", "answerable": false, "expected_keywords": []},
+    {"question": "Who won the World Cup in 2018?", "answerable": false, "expected_keywords": []},
+    {"question": "What is the current price of Bitcoin?", "answerable": false, "expected_keywords": []}
+  ]
+}
