@@ -1,106 +1,127 @@
-## Bible RAG Assistant
+# Bible RAG Assistant
 
-A Retrieval-Augmented Generation (RAG) application that answers questions strictly from Bible text, refusing to guess when evidence is missing.
+A Retrieval-Augmented Generation (RAG) application that answers questions **strictly from Bible text**, cites the exact verses it used, and **refuses to answer when no relevant passage is retrieved** — rather than guessing.
 
-Built as a practical exploration of RAG system design, semantic search in vector databases, and System prompt design in LLM usage.
+Built as a practical exploration of RAG system design: semantic retrieval, grounding guarantees, verse-level citations, and measured evaluation.
 
-## Overview
+## Why this project is more than a demo
 
-This project implements an end-to-end RAG pipeline using the Bible as a fixed knowledge source.
-Instead of relying on a model’s memory, each answer is generated only after retrieving relevant passages from the source text.
+Most RAG tutorials stop at "retrieve top-k, then answer." This project adds the parts that make a RAG system trustworthy and measurable:
 
-If no supporting passages are found, the system explicitly responds that it cannot produce a grounded answer.
+- **Enforced grounding.** Off-topic questions ("What is the capital of France?") are refused *before* an LLM call, using a measured relevance threshold. The refusal is a real gate, not just a prompt instruction.
+- **Verse-level citations.** The KJV PDF is parsed into 31,102 structured verses, so answers cite `[Genesis 1:3-5]` — not an opaque chunk id — and the UI shows the source passages.
+- **An evaluation harness.** A labeled dataset and scoring script report retrieval recall, refusal accuracy, and answer coverage, so quality is a number, not a vibe.
+
+## Results
+
+Measured on the labeled evaluation set (`eval/dataset.json`, 20 cases) with OpenAI embeddings:
+
+| Metric | Score | Meaning |
+|---|---|---|
+| Retrieval recall@k | 100% (15/15) | Relevant passage retrieved for answerable questions |
+| Refusal accuracy | 100% (20/20) | Answered in-scope questions, refused off-topic ones |
+| Answer coverage | 100% (15/15) | Final answer contained the expected fact |
+
+Reproduce with `python -m eval.evaluate` (writes `eval/results.json`). The dataset is intentionally small and readable; extend it to stress the system further.
+
+## How grounding works
+
+1. Retrieve the top-K chunks with **cosine relevance scores** (Chroma is built with `hnsw:space: cosine` so scores land in `[0, 1]`).
+2. Keep only chunks scoring above `SCORE_THRESHOLD`.
+3. If nothing clears the bar, return a fixed refusal message — **no LLM call**.
+4. Otherwise, pass the surviving passages (labelled with their verse references) to the LLM under a grounding system prompt.
+
+The threshold is backend-specific and was chosen from measured data: with OpenAI embeddings and verse-range chunks, off-topic queries top out around 0.78 while on-topic queries bottom out around 0.81, so the default `SCORE_THRESHOLD = 0.80` separates them cleanly. It is overridable via the `SCORE_THRESHOLD` environment variable.
 
 ## Tech Stack
 
-LangChain – RAG orchestration
+- **LangChain** – RAG orchestration
+- **ChromaDB** – vector database for semantic search (cosine distance)
+- **OpenAI / Hugging Face** – interchangeable embedding backends
+- **Gradio** – web interface
+- **Hugging Face Spaces** – deployment
 
-ChromaDB – vector database for semantic search
+## Architecture
 
-OpenAI / Hugging Face – interchangeable embedding backends
+**Ingestion** (`src/bible_parser.py`, `src/ingest.py`)
+- Parse the KJV PDF into structured verses (book, chapter, verse) using the chapter headers and verse-number markers in the source
+- Group consecutive verses into ~1000-char chunks that never cross a chapter, so each chunk carries a clean citation reference
+- Embed and store in Chroma with a cosine distance metric
 
-Gradio – lightweight web interface
-
-Hugging Face Spaces – deployment
-
-## Architecture Summary
-
-Ingestion
-
-Load Bible PDF
-
-Split text into overlapping chunks
-
-Generate embeddings
-
-Store vectors in ChromaDB
-
-Retrieval & Answering
-
-Retrieve top-K most relevant chunks per question
-
-Assemble retrieved context
-
-Generate answers using an LLM
-
-Enforce grounding and citations strictly from Bible text
-
-Prompting
-
-Context-only responses
-
-No hallucination
-
-Chunk and verse references included
+**Retrieval & answering** (`src/rag_qa.py`)
+- Relevance-scored retrieval with a grounding threshold (see above)
+- Greetings and empty input handled in code (no wasted retrieval / LLM calls)
+- Cached vector store and LLM client
+- Answers cite verse references; the UI shows the source passages
 
 ## Project Structure
 
 ```text
 bible-rag-langchain/
-├──assets/
-│   └── demo_ui.webp
 ├── app.py                     # Gradio application entry point
 ├── data/
-│   └── bible.pdf              # Bible source document
+│   └── bible.pdf              # Bible source document (KJV)
 ├── src/
-│   ├── ingest.py              # PDF ingestion + vector store creation
-│   ├── rag_qa.py              # Retrieval and QA pipeline
+│   ├── bible_parser.py        # PDF -> structured verses (book/chapter/verse)
+│   ├── ingest.py              # Chunking + vector store creation
+│   ├── rag_qa.py              # Retrieval, grounding, and QA pipeline
 │   ├── embeddings.py          # Embedding backend abstraction
 │   ├── prompts.py             # System and user prompt templates
 │   └── settings.py            # Configuration and constants
-├── requirements.txt           # Python dependencies
-├── Dockerfile                 # Local containerization (optional)
-├── .dockerignore              # Docker ignore rules
-└── README.md                  # Project documentation
+├── eval/
+│   ├── dataset.json           # Labeled evaluation set
+│   ├── evaluate.py            # Retrieval / refusal / coverage metrics
+│   └── results.json           # Latest eval results
+├── tests/
+│   └── sanity_qa.py           # Quick manual smoke test
+├── requirements.txt
+├── Dockerfile
+└── README.md
 ```
 
 ## Configuration
 
-Environment variables:
+Environment variables (see `.env`):
 
+```bash
 OPENAI_API_KEY=your_api_key
-EMBEDDINGS_BACKEND=openai   # or huggingface
+EMBEDDINGS_BACKEND=openai        # or "huggingface"
+OPENAI_MODEL=gpt-4o-mini
+SCORE_THRESHOLD=0.80             # optional; retune if you change the backend
+```
 
 Secrets are managed via Hugging Face Spaces during deployment.
 
+## Running locally
+
+```bash
+pip install -r requirements.txt
+
+# 1. Build the vector store from the Bible PDF (writes to db/)
+python -m src.ingest
+
+# 2. Launch the app
+python app.py            # http://localhost:7860
+
+# Optional: run the evaluation harness or a quick smoke test
+python -m eval.evaluate
+python -m tests.sanity_qa
+```
+
+> Note: Gradio 4.x depends on `pydub`, which needs the `audioop` module removed
+> from the Python standard library in 3.13. Use **Python 3.11** (as the
+> Dockerfile does) or install the `audioop-lts` backport when running on 3.13.
+
 ## Deployment
 
-The application is deployed on Hugging Face Spaces using Gradio.
-Docker was used locally to validate portability and cross-platform deployment readiness.
-
-Notes:
-Answers are generated only from retrieved Bible passages
-The architecture allows easy switching between paid and free embedding models
+Deployed on Hugging Face Spaces using Gradio; Docker (`python:3.11-slim`) is used to validate portability. The vector store (`db/`) is gitignored and rebuilt via `python -m src.ingest`.
 
 ## Demo
-Try the live application on Hugging Face Spaces:
 
-### Snapshot of Live Demonstration
+Live application: https://huggingface.co/spaces/Ikhimwin/bible-rag-langchain
+
 ![Bible RAG Assistant](assets/demo_ui.webp)
 
+## Write-up
 
-https://huggingface.co/spaces/Ikhimwin/bible-rag-langchain 
-
-## Publication on Medium
-
-https://medium.com/@ikhimwinemmanuel/building-a-bible-q-a-assistant-with-rag-langchain-chromadb-59543c976199?postPublishedType=initial
+https://medium.com/@ikhimwinemmanuel/building-a-bible-q-a-assistant-with-rag-langchain-chromadb-59543c976199
