@@ -14,7 +14,9 @@ Most RAG tutorials stop at "retrieve top-k, then answer." This project adds the 
 
 ## Results
 
-Measured on the labeled evaluation set (`eval/dataset.json`, 20 cases) with OpenAI embeddings:
+The project is evaluated two ways: a fast deterministic harness for CI-style checks, and RAGAS (LLM-as-judge) for deeper quality metrics.
+
+**1. Custom harness** (`eval/dataset.json`, 20 cases; `python -m eval.evaluate`):
 
 | Metric | Score | Meaning |
 |---|---|---|
@@ -22,7 +24,16 @@ Measured on the labeled evaluation set (`eval/dataset.json`, 20 cases) with Open
 | Refusal accuracy | 100% (20/20) | Answered in-scope questions, refused off-topic ones |
 | Answer coverage | 100% (15/15) | Final answer contained the expected fact |
 
-Reproduce with `python -m eval.evaluate` (writes `eval/results.json`). The dataset is intentionally small and readable; extend it to stress the system further.
+**2. RAGAS** (`eval/ragas_dataset.json`, 15 cases; `python -m eval.ragas_eval`):
+
+| RAGAS metric | Score | Meaning |
+|---|---|---|
+| Faithfulness | 0.93 | Answer claims are supported by the retrieved passages |
+| Answer relevancy | 0.90 | Answer actually addresses the question |
+| Context precision | 0.80 | Retrieved passages are relevant / well-ranked |
+| Context recall | 1.00 | Retrieval covered what the reference answer needs |
+
+Both datasets are intentionally small and readable; extend them to stress the system further. RAGAS deps are heavy and eval-only — see `eval/requirements-eval.txt`.
 
 ## How grounding works
 
@@ -69,8 +80,11 @@ bible-rag-langchain/
 │   ├── prompts.py             # System and user prompt templates
 │   └── settings.py            # Configuration and constants
 ├── eval/
-│   ├── dataset.json           # Labeled evaluation set
+│   ├── dataset.json           # Labeled set for the custom harness
 │   ├── evaluate.py            # Retrieval / refusal / coverage metrics
+│   ├── ragas_dataset.json     # Ground-truth set for RAGAS
+│   ├── ragas_eval.py          # RAGAS LLM-as-judge metrics
+│   ├── requirements-eval.txt  # Eval-only deps (RAGAS)
 │   └── results.json           # Latest eval results
 ├── tests/
 │   └── sanity_qa.py           # Quick manual smoke test

@@ -1,0 +1,11 @@
+# RAGAS evaluation dependencies — EVAL ONLY. Do NOT add these to the app image
+# (requirements.txt); they are heavy (datasets, pyarrow, ...) and unused at runtime.
+#
+# Install on top of the main requirements in a dev environment:
+#     pip install -r requirements.txt -r eval/requirements-eval.txt
+#     python -m eval.ragas_eval
+#
+# ragas 0.2.x is the line verified compatible with the pinned langchain-core
+# 0.3.x stack. Note: it pulls langchain-community 0.3.24 (a hair below the app's
+# pinned 0.3.25) — harmless for eval, and the deployed app never installs this.
+ragas==0.2.15

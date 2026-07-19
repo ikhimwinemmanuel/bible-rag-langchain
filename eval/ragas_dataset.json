@@ -1,0 +1,20 @@
+{
+  "description": "Ground-truth set for RAGAS evaluation of the Bible RAG assistant. Each case has a reference (gold) answer used by reference-based metrics (context precision/recall). Only answerable questions are included; refusal behaviour is covered by the custom harness in evaluate.py.",
+  "cases": [
+    {"question": "Who built the ark?", "reference": "Noah built the ark."},
+    {"question": "What is the greatest commandment?", "reference": "To love the Lord your God with all your heart, soul, and mind, and to love your neighbour as yourself."},
+    {"question": "Who was swallowed by a great fish?", "reference": "Jonah was swallowed by a great fish."},
+    {"question": "What did God create on the first day?", "reference": "On the first day God created light and divided the light from the darkness."},
+    {"question": "Who led the Israelites out of Egypt?", "reference": "Moses led the Israelites out of Egypt."},
+    {"question": "Where was Jesus born?", "reference": "Jesus was born in Bethlehem of Judaea."},
+    {"question": "Who denied Jesus three times?", "reference": "Peter denied Jesus three times."},
+    {"question": "Who was thrown into the lions' den?", "reference": "Daniel was thrown into the lions' den."},
+    {"question": "What are the first words of the Bible?", "reference": "In the beginning God created the heaven and the earth."},
+    {"question": "Who betrayed Jesus?", "reference": "Judas Iscariot betrayed Jesus."},
+    {"question": "What did Moses receive on Mount Sinai?", "reference": "Moses received the Ten Commandments (the tables of stone) on Mount Sinai."},
+    {"question": "Who was the strong man whose strength was in his hair?", "reference": "Samson, whose strength was in his hair."},
+    {"question": "How did God create man?", "reference": "God formed man of the dust of the ground and breathed into his nostrils the breath of life, and man became a living soul."},
+    {"question": "Who was the mother of Jesus?", "reference": "Mary was the mother of Jesus."},
+    {"question": "What happened when the people built the Tower of Babel?", "reference": "God confounded their language so they could not understand one another, and scattered them across the earth."}
+  ]
+}
