@@ -63,11 +63,11 @@ def retrieve_context(vectordb, question):
 
 
 def format_context(docs):
-    """Combine text from retrieved chunks into a single string."""
+    """Combine retrieved chunks into a single string, tagged by verse reference."""
     combined = ""
     for d in docs:
-        chunk_id = d.metadata.get("chunk_id", "unknown")
-        combined += f"[Chunk {chunk_id}] {d.page_content}\n\n"
+        ref = d.metadata.get("ref") or f"Chunk {d.metadata.get('chunk_id', 'unknown')}"
+        combined += f"[{ref}] {d.page_content}\n\n"
     return combined
 
 
