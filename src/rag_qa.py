@@ -83,21 +83,37 @@ def generate_answer(question, context):
     return response.content
 
 
-def answer_question(question):
+def answer_with_sources(question):
+    """Answer a question and return (answer_text, sources).
+
+    sources is a list of {"ref", "text"} dicts for the passages that grounded
+    the answer — empty for greetings, empty input, or refusals.
+    """
     question = (question or "").strip()
 
     if not question:
-        return "Please ask a Bible-related question."
+        return "Please ask a Bible-related question.", []
 
     if is_greeting(question):
-        return GREETING_REPLY
+        return GREETING_REPLY, []
 
     vectordb = load_vectordb()
     docs = retrieve_context(vectordb, question)
 
     # Grounding guarantee: no relevant passages -> refuse instead of guessing.
     if not docs:
-        return NO_CONTEXT_MESSAGE
+        return NO_CONTEXT_MESSAGE, []
 
     context = format_context(docs)
-    return generate_answer(question, context)
+    answer = generate_answer(question, context)
+    sources = [
+        {"ref": d.metadata.get("ref", "unknown"), "text": d.page_content}
+        for d in docs
+    ]
+    return answer, sources
+
+
+def answer_question(question):
+    """Backward-compatible wrapper returning just the answer text."""
+    answer, _ = answer_with_sources(question)
+    return answer
