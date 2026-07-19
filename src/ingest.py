@@ -42,14 +42,17 @@ def main():
     embeddings = get_embeddings()
 
     # 4. Build the vector store (vector database)
+    # Use cosine distance so relevance scores land in [0, 1] and SCORE_THRESHOLD
+    # in retrieval is a meaningful "minimum similarity" gate.
     print("Creating Chroma vector store...")
-    vectordb = Chroma.from_documents(
+    Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
-        persist_directory=CHROMA_DIR
+        persist_directory=CHROMA_DIR,
+        collection_metadata={"hnsw:space": "cosine"},
     )
-
-    vectordb.persist() #write all vector database file permanently
+    # Chroma with a persist_directory writes to disk automatically; the old
+    # .persist() call is deprecated/removed in current versions.
     print(f"Chroma vector store saved to: {CHROMA_DIR}")
 
 if __name__ == "__main__":
