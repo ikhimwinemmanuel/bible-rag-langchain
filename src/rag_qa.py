@@ -1,6 +1,6 @@
 import functools
 
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI
 
 from src.embeddings import get_embeddings

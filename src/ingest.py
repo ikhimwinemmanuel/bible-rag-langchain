@@ -1,7 +1,7 @@
 import os
 
 from langchain_core.documents import Document
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 
 from src.embeddings import get_embeddings
 from src.bible_parser import parse_verses

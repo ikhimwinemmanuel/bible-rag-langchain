@@ -6,6 +6,9 @@ langchain-openai==0.3.19
 langchain-text-splitters==0.3.8
 
 # Vector store & PDF ingestion
+# langchain-chroma replaces the deprecated langchain_community Chroma import;
+# 0.2.x is the line compatible with the pinned langchain-core 0.3.x stack.
+langchain-chroma==0.2.4
 # NOTE: intentionally unpinned until verified against the deployed build;
 # pin to the Space's resolved versions once confirmed.
 chromadb
@@ -17,7 +20,13 @@ tiktoken==0.12.0
 
 # Web UI - pinned: Gradio v5/v6 change the ChatInterface API and break app.py
 gradio==4.44.0
+# Gradio 4.44 imports HfFolder, removed in huggingface_hub 1.0 -> cap below 1.0
+huggingface_hub<1.0
 
 # Utilities
 python-dotenv==1.1.0
 numpy
+
+# Python 3.13 removed the stdlib 'audioop' module that Gradio's pydub needs;
+# no-op on 3.11 (the Dockerfile base). Only installs on 3.13+.
+audioop-lts; python_version >= "3.13"
