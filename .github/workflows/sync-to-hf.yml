@@ -1,0 +1,30 @@
+name: Sync to Hugging Face Space
+
+# Mirrors GitHub `main` to the Hugging Face Space on every push, so the deployed
+# app always matches the repo. Requires a repo secret HF_TOKEN (a Hugging Face
+# write token: https://huggingface.co/settings/tokens).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # allow manual runs from the Actions tab
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history + LFS objects)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git lfs install
+          # Force-push so GitHub is the single source of truth for the Space.
+          git push --force \
+            "https://ikhimwinemmanuel:${HF_TOKEN}@huggingface.co/spaces/Ikhimwin/bible-rag-langchain" \
+            main

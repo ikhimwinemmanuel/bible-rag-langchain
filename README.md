@@ -1,3 +1,15 @@
+---
+title: Bible RAG Assistant
+emoji: 📖
+colorFrom: indigo
+colorTo: blue
+sdk: gradio
+sdk_version: 4.44.0
+app_file: app.py
+python_version: "3.12"
+pinned: false
+---
+
 # Bible RAG Assistant
 
 A Retrieval-Augmented Generation (RAG) application that answers questions **strictly from Bible text**, cites the exact verses it used, and **refuses to answer when no relevant passage is retrieved** — rather than guessing.

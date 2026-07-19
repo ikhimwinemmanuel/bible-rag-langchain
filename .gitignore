@@ -5,8 +5,9 @@ __pycache__/
 # Ignore environment files
 .env
 
-# Ignore vector DB files
-db/
+# NOTE: db/ is intentionally NOT ignored — the prebuilt Chroma vector store is
+# committed via git-LFS (see .gitattributes) so the Hugging Face Space can load
+# it directly without re-embedding on startup. Rebuild with `python -m src.ingest`.
 
 # Ignore virtual environments
 venv/
