@@ -21,15 +21,12 @@ pypdf
 openai==1.109.1
 tiktoken==0.12.0
 
-# Web UI - pinned: Gradio v5/v6 change the ChatInterface API and break app.py
-gradio==4.44.0
-# Gradio 4.44 imports HfFolder, removed in huggingface_hub 1.0 -> cap below 1.0
-huggingface_hub<1.0
+# Web UI: Gradio is installed by the HF Space via README `sdk_version`, so it is
+# intentionally NOT pinned here. Gradio 4.44 is NOT viable on HF anymore — the
+# HF-injected `spaces` package forces a new FastAPI that breaks 4.44's template
+# rendering. app.py only uses `message` (ignores history), so it is compatible
+# with modern Gradio 5/6. For local dev, `pip install gradio`.
 
 # Utilities
 python-dotenv==1.1.0
 numpy
-
-# Python 3.13 removed the stdlib 'audioop' module that Gradio's pydub needs;
-# no-op on 3.11 (the Dockerfile base). Only installs on 3.13+.
-audioop-lts; python_version >= "3.13"
