@@ -157,6 +157,3 @@ Live application: https://huggingface.co/spaces/Ikhimwin/bible-rag-langchain
 
 ![Bible RAG Assistant](assets/demo_ui.webp)
 
-## Write-up
-
-https://medium.com/@ikhimwinemmanuel/building-a-bible-q-a-assistant-with-rag-langchain-chromadb-59543c976199
