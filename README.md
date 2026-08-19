@@ -120,9 +120,9 @@ Environment variables (see `.env`):
 
 ```bash
 OPENAI_API_KEY=your_api_key
-EMBEDDINGS_BACKEND=openai        # or "huggingface"
+EMBEDDINGS_BACKEND=openai        
 OPENAI_MODEL=gpt-4o-mini
-SCORE_THRESHOLD=0.80             # optional; retune if you change the backend
+SCORE_THRESHOLD=0.80             
 ```
 
 Secrets are managed via Hugging Face Spaces during deployment.
