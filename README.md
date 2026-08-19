@@ -138,7 +138,7 @@ python -m src.ingest
 # 2. Launch the app
 python app.py            # http://localhost:7860
 
-# Optional: run the evaluation harness or a quick smoke test
+# run the evaluation harness 
 python -m eval.evaluate
 python -m tests.sanity_qa
 ```
